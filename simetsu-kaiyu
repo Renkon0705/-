@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>死滅回游 総則</title>
+
+<style>
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #111, #000);
+  color: #fff;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  height: 90vh;
+  width: 90vw;
+  max-width: 900px;
+  border: 4px solid #c9a24d;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(201,162,77,.6);
+  padding: 30px;
+  box-sizing: border-box;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  text-align: center;
+  color: #c9a24d;
+  margin-bottom: 20px;
+  letter-spacing: 0.2em;
+}
+
+/* ===== 縦書き本文 ===== */
+#rules {
+  flex: 1;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-size: 22px;
+  line-height: 2.2;
+  overflow-x: auto;
+  padding: 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* スクロールバー目立たなく */
+#rules::-webkit-scrollbar {
+  height: 6px;
+}
+#rules::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3);
+  border-radius: 3px;
+}
+
+#footer {
+  text-align: right;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>死滅回游 総則</h1>
+  <div id="rules">読み込み中…</div>
+  <div id="footer">ver. 1.0.0</div>
+</div>
+
+<script>
+const csvURL =
+"https://docs.google.com/spreadsheets/d/1apIMeSGaA8H6hFC0Ko-84c-AJXdAnQUMfj1nZSqwEnQ/export?format=csv&gid=1736586649";
+
+fetch(csvURL)
+  .then(res => res.text())
+  .then(text => {
+    const lines = text.trim().split("\n").slice(1); // B2以下
+    const rules = lines
+      .map(l => l.split(",")[1])
+      .filter(v => v && v.trim() !== "");
+
+    const box = document.getElementById("rules");
+    box.innerHTML = rules.map(r => `〈${r}〉`).join("");
+  })
+  .catch(() => {
+    document.getElementById("rules").textContent =
+      "総則の取得に失敗しました";
+  });
+</script>
+
+</body>
+</html>
