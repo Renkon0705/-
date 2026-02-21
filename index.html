@@ -15,7 +15,7 @@ html, body {
   color: #fff;
 }
 
-/* 全体 */
+/* 全体中央寄せ */
 .wrapper {
   height: 100%;
   display: flex;
@@ -23,11 +23,20 @@ html, body {
   align-items: center;
 }
 
-/* 縦書きエリア */
+/* 横スクロール用コンテナ */
+.scroll-area {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 40px 20px;
+}
+
+/* 縦書き本体 */
 .rules {
   writing-mode: vertical-rl;
   text-orientation: upright;
-  max-height: 90vh;
+  height: 80vh;
+  display: inline-flex;
   padding: 40px;
   background: rgba(0,0,0,0.25);
   box-shadow: 0 0 40px rgba(0,0,0,0.4);
@@ -40,7 +49,6 @@ html, body {
   margin-left: 40px;
 }
 
-/* 総則 */
 .subtitle {
   font-size: 26px;
   margin-left: 30px;
@@ -51,7 +59,6 @@ html, body {
   font-size: 18px;
   line-height: 1.8;
   margin-left: 25px;
-  max-height: 80vh;
 }
 
 /* 番号 */
@@ -66,10 +73,12 @@ html, body {
 <body>
 
 <div class="wrapper">
-  <div class="rules">
-    <div class="title">死滅回游</div>
-    <div class="subtitle">総則</div>
-    <div id="ruleText" class="rule">読み込み中…</div>
+  <div class="scroll-area">
+    <div class="rules">
+      <div class="title">死滅回游</div>
+      <div class="subtitle">総則</div>
+      <div id="ruleText" class="rule">読み込み中…</div>
+    </div>
   </div>
 </div>
 
