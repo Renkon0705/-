@@ -10,15 +10,11 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-
-  /* ===== 背景だけ変更（少し雲っぽい青空） ===== */
   background:
     radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15), transparent 40%),
     radial-gradient(circle at 80% 30%, rgba(255,255,255,0.12), transparent 45%),
     radial-gradient(circle at 50% 70%, rgba(255,255,255,0.1), transparent 50%),
     linear-gradient(to bottom, #3a78b8 0%, #1f4f86 60%, #0b2a4a 100%);
-  /* ========================================== */
-
   color: #fff;
   font-family: "Hiragino Mincho ProN", serif;
   overflow: hidden;
@@ -56,12 +52,15 @@ html, body {
   box-sizing: border-box;
 }
 
+/* ▼ 総則番号だけ右へ */
 .rule-number {
   font-size: 18px;
   margin-bottom: 12px;
   writing-mode: horizontal-tb;
+  margin-left: 6px;
 }
 
+/* ▼ 本文は一切変更なし */
 .rule-text {
   writing-mode: vertical-rl;
   font-size: 18px;
