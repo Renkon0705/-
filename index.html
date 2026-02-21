@@ -16,6 +16,22 @@ html, body {
   overflow: hidden;
 }
 
+.title {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  writing-mode: vertical-rl;
+  font-size: 28px;
+}
+
+.subtitle {
+  position: fixed;
+  right: 60px;
+  top: 20px;
+  writing-mode: vertical-rl;
+  font-size: 20px;
+}
+
 .scroll-area {
   display: flex;
   flex-direction: row;
@@ -28,24 +44,8 @@ html, body {
   flex: 0 0 100vw;
   height: 100vh;
   scroll-snap-align: start;
-  padding: 60px 40px;
+  padding: 120px 40px 40px;
   box-sizing: border-box;
-}
-
-.title {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  writing-mode: vertical-rl;
-  font-size: 28px;
-}
-
-.subtitle {
-  position: absolute;
-  right: 60px;
-  top: 20px;
-  writing-mode: vertical-rl;
-  font-size: 20px;
 }
 
 .rule-number {
@@ -64,41 +64,43 @@ html, body {
 
 <body>
 
-<div class="scroll-area" id="area">
+<div class="title">死滅回游</div>
+<div class="subtitle">総則</div>
 
-  <!-- 総則3（左端） -->
-  <section class="rule">
-    <div class="rule-number">三</div>
-    <div class="rule-text">
-      一定期間点数の変動がない場合、術式は剥奪される。
-    </div>
-  </section>
-
-  <!-- 総則2 -->
-  <section class="rule">
-    <div class="rule-number">二</div>
-    <div class="rule-text">
-      参加者は他者を殺害することで点数を獲得できる。
-    </div>
-  </section>
-
-  <!-- 総則1（初期表示） -->
-  <section class="rule">
-    <div class="rule-number">一</div>
-    <div class="rule-text">
-      本回游は参加者全員が術式を用いて戦闘を行うことを義務とする。
-    </div>
-  </section>
-
-</div>
+<div class="scroll-area" id="area"></div>
 
 <script>
-const area = document.getElementById("area");
+/* ★ あなたのスプレッドシートCSV */
+const CSV_URL =
+  "https://docs.google.com/spreadsheets/d/1apIMeSGaA8H6hFC0Ko-84c-AJXdAnQUMfj1nZSqwEnQ/export?format=csv&gid=1736586649";
 
-/* 初期表示を「総則1」に合わせる */
-requestAnimationFrame(() => {
-  area.scrollLeft = area.scrollWidth - window.innerWidth;
-});
+fetch(CSV_URL)
+  .then(res => res.text())
+  .then(text => {
+    const lines = text.split("\n").slice(1); // B2以下
+    const rules = lines
+      .map(l => l.replace(/"/g, "").trim())
+      .filter(l => l !== "");
+
+    const area = document.getElementById("area");
+
+    /* 逆順でDOMに入れる（←スワイプで次） */
+    rules.slice().reverse().forEach((rule, i) => {
+      const index = rules.length - i;
+      const section = document.createElement("section");
+      section.className = "rule";
+      section.innerHTML = `
+        <div class="rule-number">${index}</div>
+        <div class="rule-text">${rule}</div>
+      `;
+      area.appendChild(section);
+    });
+
+    /* 初期表示を「総則1」に合わせる */
+    requestAnimationFrame(() => {
+      area.scrollLeft = area.scrollWidth - window.innerWidth;
+    });
+  });
 </script>
 
 </body>
