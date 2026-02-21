@@ -15,11 +15,11 @@ body {
   overflow: hidden;
 }
 
-/* ===== タイトル ===== */
+/* ===== タイトル（右配置） ===== */
 .header {
   position: fixed;
   top: 20px;
-  left: 20px;
+  right: 20px;   /* ← 左から右へ変更 */
   display: flex;
   gap: 12px;
   z-index: 10;
@@ -43,12 +43,12 @@ body {
 /* ===== 横スワイプ ===== */
 .scroll-area {
   display: flex;
-  direction: rtl; /* 左スワイプで次 */
+  direction: rtl; /* 左に左に並ぶ（右→左スワイプ） */
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  padding-top: 100px; /* タイトル分 */
+  padding-top: 100px;
   box-sizing: border-box;
 }
 
@@ -62,13 +62,13 @@ body {
   justify-content: center;
 }
 
-/* ★ ここだけ調整 */
+/* ===== 本文（さらに上へ） ===== */
 .text {
   writing-mode: vertical-rl;
   font-size: 22px;
   line-height: 1.9;
   max-height: 80vh;
-  margin-top: -20px; /* ← 本文を少し上へ */
+  margin-top: -35px; /* ← ここをさらに上に */
 }
 
 /* ===== ボタン ===== */
@@ -93,7 +93,7 @@ button {
 
 <body>
 
-<!-- タイトルは1回だけ -->
+<!-- タイトルは1回だけ（右） -->
 <div class="header">
   <div class="title">死滅回游</div>
   <div class="subtitle">総則</div>
@@ -126,7 +126,7 @@ fetch(csvURL)
       area.appendChild(div);
     });
 
-    /* 最初は総則1 */
+    /* 最初は総則1が見える位置 */
     area.scrollLeft = area.scrollWidth;
   });
 
