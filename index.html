@@ -10,7 +10,15 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: #0b2a4a;
+
+  /* ===== 背景だけ変更（少し雲っぽい青空） ===== */
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(255,255,255,0.12), transparent 45%),
+    radial-gradient(circle at 50% 70%, rgba(255,255,255,0.1), transparent 50%),
+    linear-gradient(to bottom, #3a78b8 0%, #1f4f86 60%, #0b2a4a 100%);
+  /* ========================================== */
+
   color: #fff;
   font-family: "Hiragino Mincho ProN", serif;
   overflow: hidden;
@@ -81,7 +89,7 @@ fetch(CSV_URL)
     const rules = lines
       .map(l => l.replace(/"/g, "").trim())
       .filter(l => l !== "")
-      .map(l => l.replace(/^,/, "")); // ← ★本文先頭の「,」だけ削除
+      .map(l => l.replace(/^,/, ""));
 
     const area = document.getElementById("area");
 
