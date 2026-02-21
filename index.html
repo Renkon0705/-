@@ -37,13 +37,13 @@ html, body {
   flex-direction: row;
   height: 100vh;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .rule {
   flex: 0 0 100vw;
   height: 100vh;
-  scroll-snap-align: start;
   padding: 120px 40px 40px;
   box-sizing: border-box;
 }
@@ -70,21 +70,19 @@ html, body {
 <div class="scroll-area" id="area"></div>
 
 <script>
-/* ★ あなたのスプレッドシートCSV */
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/1apIMeSGaA8H6hFC0Ko-84c-AJXdAnQUMfj1nZSqwEnQ/export?format=csv&gid=1736586649";
 
 fetch(CSV_URL)
   .then(res => res.text())
   .then(text => {
-    const lines = text.split("\n").slice(1); // B2以下
+    const lines = text.split("\n").slice(1);
     const rules = lines
       .map(l => l.replace(/"/g, "").trim())
       .filter(l => l !== "");
 
     const area = document.getElementById("area");
 
-    /* 逆順でDOMに入れる（←スワイプで次） */
     rules.slice().reverse().forEach((rule, i) => {
       const index = rules.length - i;
       const section = document.createElement("section");
@@ -96,7 +94,7 @@ fetch(CSV_URL)
       area.appendChild(section);
     });
 
-    /* 初期表示を「総則1」に合わせる */
+    /* 初期表示を総則1に */
     requestAnimationFrame(() => {
       area.scrollLeft = area.scrollWidth - window.innerWidth;
     });
