@@ -15,7 +15,7 @@ body {
   overflow: hidden;
 }
 
-/* ===== タイトル（右・1回だけ） ===== */
+/* タイトル（右固定・変更なし） */
 .header {
   position: fixed;
   top: 20px;
@@ -34,7 +34,7 @@ body {
 .header .title { font-size: 36px; }
 .header .subtitle { font-size: 22px; opacity: 0.85; }
 
-/* ===== 横スワイプ（左へ） ===== */
+/* スクロール（※向き一切触ってない） */
 .scroll-area {
   display: flex;
   height: 100vh;
@@ -54,18 +54,18 @@ body {
   box-sizing: border-box;
 }
 
-/* ===== 総則本体 ===== */
+/* 本文 */
 .text {
   writing-mode: vertical-rl;
   font-size: 22px;
   line-height: 1.9;
   max-height: 80vh;
 
-  /* 本文位置（上に移動） */
+  /* 本文位置（上寄せ） */
   transform: translateY(-60px);
 }
 
-/* 総則番号 */
+/* 総則番号（自動付番） */
 .number {
   writing-mode: vertical-rl;
   font-size: 16px;
@@ -74,7 +74,7 @@ body {
   letter-spacing: 2px;
 }
 
-/* ===== ボタン ===== */
+/* ボタン */
 .controls {
   position: fixed;
   bottom: 20px;
@@ -119,24 +119,25 @@ fetch(csvURL)
     const rows = text.trim().split("\n").slice(1);
     const area = document.getElementById("scrollArea");
 
+    let index = 1; // ← 総則番号はここで付ける
+
     rows.forEach(r => {
       const cols = r.split(",");
-      const num = cols[0];
-      const body = cols[1];
+      const body = cols[1]; // 本文のみ使用
       if (!body) return;
 
       const div = document.createElement("div");
       div.className = "rule";
       div.innerHTML = `
         <div class="text">
-          <div class="number">${num}</div>
+          <div class="number">${index}</div>
           <div>${body}</div>
         </div>
       `;
       area.appendChild(div);
+      index++;
     });
 
-    // 総則1を最初に表示
     area.scrollLeft = 0;
   });
 
@@ -148,13 +149,13 @@ document.getElementById("toggleBtn").onclick = () => {
     area.style.flexWrap = "wrap";
     area.style.overflowY = "auto";
     area.style.height = "auto";
-    document.getElementById("toggleBtn").textContent = "個別表示";
+    toggleBtn.textContent = "個別表示";
   } else {
     area.style.flexWrap = "nowrap";
     area.style.overflowY = "hidden";
     area.style.height = "100vh";
     area.scrollLeft = 0;
-    document.getElementById("toggleBtn").textContent = "一覧表示";
+    toggleBtn.textContent = "一覧表示";
   }
 };
 </script>
