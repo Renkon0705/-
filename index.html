@@ -8,13 +8,12 @@
 <style>
 body {
   margin: 0;
-  background: #000;
+  background: #000; /* ← 変更なし */
   color: #fff;
   font-family: "Hiragino Mincho ProN", serif;
   overflow: hidden;
 }
 
-/* 横スクロール全体 */
 .scroll-area {
   display: flex;
   flex-direction: row; /* ← 左に左に並ぶ */
@@ -24,7 +23,6 @@ body {
   scroll-snap-type: x mandatory;
 }
 
-/* 各総則 */
 .rule {
   min-width: 100vw;
   padding: 40px 30px;
@@ -34,21 +32,18 @@ body {
   gap: 30px;
 }
 
-/* タイトル */
 .title {
   writing-mode: vertical-rl;
   font-size: 36px;
   letter-spacing: 6px;
 }
 
-/* 本文 */
 .text {
   writing-mode: vertical-rl;
   font-size: 22px;
   line-height: 1.8;
 }
 
-/* 下ボタン */
 .controls {
   position: fixed;
   bottom: 20px;
@@ -100,7 +95,7 @@ fetch(csvURL)
       area.appendChild(div);
     });
 
-    /* 初期表示：総則1（一番左） */
+    /* ← 総則1（左端）を初期表示 */
     area.scrollLeft = 0;
   });
 
@@ -117,7 +112,7 @@ document.getElementById("toggleBtn").onclick = () => {
     area.style.flexWrap = "nowrap";
     area.style.overflowY = "hidden";
     area.style.height = "100vh";
-    area.scrollLeft = 0;
+    area.scrollLeft = 0; /* ← ここも左 */
     document.getElementById("toggleBtn").textContent = "一覧表示";
   }
 };
