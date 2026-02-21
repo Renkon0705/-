@@ -51,7 +51,7 @@ html, body {
 .rule-number {
   font-size: 18px;
   margin-bottom: 12px;
-  writing-mode: horizontal-tb; /* 横 */
+  writing-mode: horizontal-tb;
 }
 
 .rule-text {
@@ -77,9 +77,11 @@ fetch(CSV_URL)
   .then(res => res.text())
   .then(text => {
     const lines = text.split("\n").slice(1);
+
     const rules = lines
       .map(l => l.replace(/"/g, "").trim())
-      .filter(l => l !== "");
+      .filter(l => l !== "")
+      .map(l => l.replace(/^,/, "")); // ← ★本文先頭の「,」だけ削除
 
     const area = document.getElementById("area");
 
@@ -94,7 +96,6 @@ fetch(CSV_URL)
       area.appendChild(section);
     });
 
-    /* 初期表示：総則1 */
     requestAnimationFrame(() => {
       area.scrollLeft = area.scrollWidth - window.innerWidth;
     });
