@@ -8,7 +8,8 @@
 <style>
 body {
   margin: 0;
-  background: #000; /* ← 変更なし */
+  height: 100vh;
+  background: linear-gradient(180deg, #0b2a5a, #071a36); /* ← 青背景復活 */
   color: #fff;
   font-family: "Hiragino Mincho ProN", serif;
   overflow: hidden;
@@ -16,7 +17,8 @@ body {
 
 .scroll-area {
   display: flex;
-  flex-direction: row; /* ← 左に左に並ぶ */
+  flex-direction: row;
+  direction: rtl;              /* ★ 右並び＋左スワイプ */
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
@@ -24,6 +26,7 @@ body {
 }
 
 .rule {
+  direction: ltr;              /* ← 中身だけ通常方向 */
   min-width: 100vw;
   padding: 40px 30px;
   box-sizing: border-box;
@@ -95,8 +98,8 @@ fetch(csvURL)
       area.appendChild(div);
     });
 
-    /* ← 総則1（左端）を初期表示 */
-    area.scrollLeft = 0;
+    /* ★ 最初は総則1が見える */
+    area.scrollLeft = area.scrollWidth;
   });
 
 document.getElementById("toggleBtn").onclick = () => {
@@ -112,7 +115,7 @@ document.getElementById("toggleBtn").onclick = () => {
     area.style.flexWrap = "nowrap";
     area.style.overflowY = "hidden";
     area.style.height = "100vh";
-    area.scrollLeft = 0; /* ← ここも左 */
+    area.scrollLeft = area.scrollWidth;
     document.getElementById("toggleBtn").textContent = "一覧表示";
   }
 };
