@@ -9,44 +9,67 @@
 body {
   margin: 0;
   height: 100vh;
-  background: linear-gradient(180deg, #0b2a5a, #071a36); /* ← 青背景復活 */
+  background: linear-gradient(180deg, #0b2a5a, #071a36);
   color: #fff;
   font-family: "Hiragino Mincho ProN", serif;
   overflow: hidden;
 }
 
+/* ===== タイトル ===== */
+.header {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.header .title,
+.header .subtitle {
+  writing-mode: vertical-rl;
+  letter-spacing: 6px;
+}
+
+.header .title {
+  font-size: 36px;
+}
+
+.header .subtitle {
+  font-size: 22px;
+  opacity: 0.85;
+}
+
+/* ===== 横スワイプ ===== */
 .scroll-area {
   display: flex;
-  flex-direction: row;
-  direction: rtl;              /* ★ 右並び＋左スワイプ */
+  direction: rtl;                 /* 左スワイプで次 */
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
+  padding-top: 100px;             /* タイトル分の余白 */
+  box-sizing: border-box;
 }
 
 .rule {
-  direction: ltr;              /* ← 中身だけ通常方向 */
+  direction: ltr;
   min-width: 100vw;
   padding: 40px 30px;
   box-sizing: border-box;
   scroll-snap-align: start;
   display: flex;
-  gap: 30px;
-}
-
-.title {
-  writing-mode: vertical-rl;
-  font-size: 36px;
-  letter-spacing: 6px;
+  justify-content: center;
 }
 
 .text {
   writing-mode: vertical-rl;
   font-size: 22px;
-  line-height: 1.8;
+  line-height: 1.9;
+  max-height: 80vh;
 }
 
+/* ===== ボタン ===== */
 .controls {
   position: fixed;
   bottom: 20px;
@@ -68,6 +91,12 @@ button {
 
 <body>
 
+<!-- タイトルは1回だけ -->
+<div class="header">
+  <div class="title">死滅回游</div>
+  <div class="subtitle">総則</div>
+</div>
+
 <div class="scroll-area" id="scrollArea"></div>
 
 <div class="controls">
@@ -88,17 +117,14 @@ fetch(csvURL)
 
     const area = document.getElementById("scrollArea");
 
-    rules.forEach((rule, i) => {
+    rules.forEach(rule => {
       const div = document.createElement("div");
       div.className = "rule";
-      div.innerHTML = `
-        <div class="title">死滅回游<br>総則${i + 1}</div>
-        <div class="text">${rule}</div>
-      `;
+      div.innerHTML = `<div class="text">${rule}</div>`;
       area.appendChild(div);
     });
 
-    /* ★ 最初は総則1が見える */
+    /* 最初は総則1 */
     area.scrollLeft = area.scrollWidth;
   });
 
