@@ -19,7 +19,7 @@ body {
 .header {
   position: fixed;
   top: 20px;
-  right: 20px;   /* ← 左から右へ変更 */
+  right: 20px;
   display: flex;
   gap: 12px;
   z-index: 10;
@@ -43,7 +43,7 @@ body {
 /* ===== 横スワイプ ===== */
 .scroll-area {
   display: flex;
-  direction: rtl; /* 左に左に並ぶ（右→左スワイプ） */
+  direction: rtl;
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
@@ -62,13 +62,13 @@ body {
   justify-content: center;
 }
 
-/* ===== 本文（さらに上へ） ===== */
+/* ===== 本文（さらに上） ===== */
 .text {
   writing-mode: vertical-rl;
   font-size: 22px;
   line-height: 1.9;
   max-height: 80vh;
-  margin-top: -35px; /* ← ここをさらに上に */
+  margin-top: -60px; /* ← ここだけ変更 */
 }
 
 /* ===== ボタン ===== */
@@ -93,7 +93,6 @@ button {
 
 <body>
 
-<!-- タイトルは1回だけ（右） -->
 <div class="header">
   <div class="title">死滅回游</div>
   <div class="subtitle">総則</div>
@@ -126,7 +125,6 @@ fetch(csvURL)
       area.appendChild(div);
     });
 
-    /* 最初は総則1が見える位置 */
     area.scrollLeft = area.scrollWidth;
   });
 
