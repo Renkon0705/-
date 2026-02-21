@@ -1,47 +1,35 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>死滅回游 総則</title>
 
 <style>
-/* ===== 全体 ===== */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: #0b2a4a; /* ← 元の青背景 */
+  background: #0b2a4a;
   color: #fff;
   font-family: "Hiragino Mincho ProN", serif;
   overflow: hidden;
 }
 
-/* ===== 横スクロール領域 ===== */
 .scroll-area {
   display: flex;
-  flex-direction: row;          /* ← 絶対 row（逆にしない） */
+  flex-direction: row;
   height: 100vh;
   overflow-x: auto;
-  overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  box-sizing: border-box;
 }
 
-/* ===== 各総則 ===== */
 .rule {
   flex: 0 0 100vw;
   height: 100vh;
   scroll-snap-align: start;
+  padding: 60px 40px;
   box-sizing: border-box;
-  padding-top: 60px;
-  padding-right: 40px;
-  padding-left: 40px;
-}
-
-/* ===== タイトル（最初のページのみ） ===== */
-.title-page {
-  position: relative;
 }
 
 .title {
@@ -50,7 +38,6 @@ html, body {
   top: 20px;
   writing-mode: vertical-rl;
   font-size: 28px;
-  letter-spacing: 0.2em;
 }
 
 .subtitle {
@@ -59,18 +46,14 @@ html, body {
   top: 20px;
   writing-mode: vertical-rl;
   font-size: 20px;
-  letter-spacing: 0.2em;
 }
 
-/* ===== 総則番号 ===== */
 .rule-number {
   writing-mode: vertical-rl;
   font-size: 18px;
-  opacity: 0.9;
   margin-bottom: 20px;
 }
 
-/* ===== 本文 ===== */
 .rule-text {
   writing-mode: vertical-rl;
   font-size: 18px;
@@ -81,19 +64,13 @@ html, body {
 
 <body>
 
-<div class="scroll-area" id="scrollArea">
+<div class="scroll-area" id="area">
 
-  <!-- タイトルページ -->
-  <section class="rule title-page">
-    <div class="title">死滅回游</div>
-    <div class="subtitle">総則</div>
-  </section>
-
-  <!-- 総則1 -->
+  <!-- 総則3（左端） -->
   <section class="rule">
-    <div class="rule-number">一</div>
+    <div class="rule-number">三</div>
     <div class="rule-text">
-      本回游は参加者全員が術式を用いて戦闘を行うことを義務とする。
+      一定期間点数の変動がない場合、術式は剥奪される。
     </div>
   </section>
 
@@ -105,29 +82,22 @@ html, body {
     </div>
   </section>
 
-  <!-- 総則3 -->
+  <!-- 総則1（初期表示） -->
   <section class="rule">
-    <div class="rule-number">三</div>
+    <div class="rule-number">一</div>
     <div class="rule-text">
-      一定期間点数の変動がない場合、術式は剥奪される。
+      本回游は参加者全員が術式を用いて戦闘を行うことを義務とする。
     </div>
   </section>
 
 </div>
 
 <script>
-/* ===== 初期表示：必ず「1が最初に見える」 ===== */
-const area = document.getElementById("scrollArea");
+const area = document.getElementById("area");
 
-/*
-  並び順は
-  [タイトル][1][2][3]
-
-  なので、
-  初期スクロールはタイトルの次＝総則1
-*/
+/* 初期表示を「総則1」に合わせる */
 requestAnimationFrame(() => {
-  area.scrollLeft = window.innerWidth;
+  area.scrollLeft = area.scrollWidth - window.innerWidth;
 });
 </script>
 
