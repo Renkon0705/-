@@ -42,16 +42,16 @@ html, body {
 }
 
 .rule {
-  flex: 0 0 100vw;
+  flex: 0 0 85vw; /* ← 間隔を縮めた */
   height: 100vh;
-  padding: 120px 40px 40px;
+  padding: 120px 30px 40px;
   box-sizing: border-box;
 }
 
 .rule-number {
-  writing-mode: vertical-rl;
   font-size: 18px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  writing-mode: horizontal-tb; /* ← 横文字 */
 }
 
 .rule-text {
@@ -94,7 +94,7 @@ fetch(CSV_URL)
       area.appendChild(section);
     });
 
-    /* 初期表示を総則1に */
+    /* 初期表示を総則1 */
     requestAnimationFrame(() => {
       area.scrollLeft = area.scrollWidth - window.innerWidth;
     });
