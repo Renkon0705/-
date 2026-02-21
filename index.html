@@ -44,14 +44,14 @@ html, body {
 .rule {
   flex: 0 0 40vw;
   height: 100vh;
-  padding: 90px 30px 40px; /* ← 上だけ少し詰めた */
+  padding: 90px 30px 40px;
   box-sizing: border-box;
 }
 
 .rule-number {
   font-size: 18px;
   margin-bottom: 12px;
-  writing-mode: horizontal-tb;
+  writing-mode: horizontal-tb; /* 横 */
 }
 
 .rule-text {
@@ -88,7 +88,7 @@ fetch(CSV_URL)
       const section = document.createElement("section");
       section.className = "rule";
       section.innerHTML = `
-        <div class="rule-number">${index}</div>
+        <div class="rule-number">${index},</div>
         <div class="rule-text">${rule}</div>
       `;
       area.appendChild(section);
