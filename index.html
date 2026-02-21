@@ -1,163 +1,134 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>死滅回游 総則</title>
 
 <style>
-body {
+/* ===== 全体 ===== */
+html, body {
   margin: 0;
-  height: 100vh;
-  background: linear-gradient(180deg, #0b2a5a, #071a36);
+  padding: 0;
+  height: 100%;
+  background: #0b2a4a; /* ← 元の青背景 */
   color: #fff;
   font-family: "Hiragino Mincho ProN", serif;
   overflow: hidden;
 }
 
-/* タイトル（右固定・変更なし） */
-.header {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 12px;
-  z-index: 10;
-}
-
-.header .title,
-.header .subtitle {
-  writing-mode: vertical-rl;
-  letter-spacing: 6px;
-}
-
-.header .title { font-size: 36px; }
-.header .subtitle { font-size: 22px; opacity: 0.85; }
-
-/* スクロール（※向き一切触ってない） */
+/* ===== 横スクロール領域 ===== */
 .scroll-area {
   display: flex;
+  flex-direction: row;          /* ← 絶対 row（逆にしない） */
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  padding-top: 100px;
   box-sizing: border-box;
 }
 
+/* ===== 各総則 ===== */
 .rule {
-  min-width: 100vw;
+  flex: 0 0 100vw;
+  height: 100vh;
   scroll-snap-align: start;
-  display: flex;
-  justify-content: center;
-  padding: 40px 30px;
   box-sizing: border-box;
+  padding-top: 60px;
+  padding-right: 40px;
+  padding-left: 40px;
 }
 
-/* 本文 */
-.text {
+/* ===== タイトル（最初のページのみ） ===== */
+.title-page {
+  position: relative;
+}
+
+.title {
+  position: absolute;
+  right: 20px;
+  top: 20px;
   writing-mode: vertical-rl;
-  font-size: 22px;
+  font-size: 28px;
+  letter-spacing: 0.2em;
+}
+
+.subtitle {
+  position: absolute;
+  right: 60px;
+  top: 20px;
+  writing-mode: vertical-rl;
+  font-size: 20px;
+  letter-spacing: 0.2em;
+}
+
+/* ===== 総則番号 ===== */
+.rule-number {
+  writing-mode: vertical-rl;
+  font-size: 18px;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+/* ===== 本文 ===== */
+.rule-text {
+  writing-mode: vertical-rl;
+  font-size: 18px;
   line-height: 1.9;
-  max-height: 80vh;
-
-  /* 本文位置（上寄せ） */
-  transform: translateY(-60px);
-}
-
-/* 総則番号（自動付番） */
-.number {
-  writing-mode: vertical-rl;
-  font-size: 16px;
-  opacity: 0.7;
-  margin-bottom: 14px;
-  letter-spacing: 2px;
-}
-
-/* ボタン */
-.controls {
-  position: fixed;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  text-align: center;
-}
-
-button {
-  background: transparent;
-  color: #fff;
-  border: 2px solid #fff;
-  padding: 10px 24px;
-  font-size: 16px;
-  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <div class="title">死滅回游</div>
-  <div class="subtitle">総則</div>
-</div>
+<div class="scroll-area" id="scrollArea">
 
-<div class="scroll-area" id="scrollArea"></div>
+  <!-- タイトルページ -->
+  <section class="rule title-page">
+    <div class="title">死滅回游</div>
+    <div class="subtitle">総則</div>
+  </section>
 
-<div class="controls">
-  <button id="toggleBtn">一覧表示</button>
+  <!-- 総則1 -->
+  <section class="rule">
+    <div class="rule-number">一</div>
+    <div class="rule-text">
+      本回游は参加者全員が術式を用いて戦闘を行うことを義務とする。
+    </div>
+  </section>
+
+  <!-- 総則2 -->
+  <section class="rule">
+    <div class="rule-number">二</div>
+    <div class="rule-text">
+      参加者は他者を殺害することで点数を獲得できる。
+    </div>
+  </section>
+
+  <!-- 総則3 -->
+  <section class="rule">
+    <div class="rule-number">三</div>
+    <div class="rule-text">
+      一定期間点数の変動がない場合、術式は剥奪される。
+    </div>
+  </section>
+
 </div>
 
 <script>
-const csvURL =
-"https://docs.google.com/spreadsheets/d/1apIMeSGaA8H6hFC0Ko-84c-AJXdAnQUMfj1nZSqwEnQ/export?format=csv&gid=1736586649";
+/* ===== 初期表示：必ず「1が最初に見える」 ===== */
+const area = document.getElementById("scrollArea");
 
-let listMode = false;
+/*
+  並び順は
+  [タイトル][1][2][3]
 
-fetch(csvURL)
-  .then(res => res.text())
-  .then(text => {
-    const rows = text.trim().split("\n").slice(1);
-    const area = document.getElementById("scrollArea");
-
-    let index = 1; // ← 総則番号はここで付ける
-
-    rows.forEach(r => {
-      const cols = r.split(",");
-      const body = cols[1]; // 本文のみ使用
-      if (!body) return;
-
-      const div = document.createElement("div");
-      div.className = "rule";
-      div.innerHTML = `
-        <div class="text">
-          <div class="number">${index}</div>
-          <div>${body}</div>
-        </div>
-      `;
-      area.appendChild(div);
-      index++;
-    });
-
-    area.scrollLeft = 0;
-  });
-
-document.getElementById("toggleBtn").onclick = () => {
-  listMode = !listMode;
-  const area = document.getElementById("scrollArea");
-
-  if (listMode) {
-    area.style.flexWrap = "wrap";
-    area.style.overflowY = "auto";
-    area.style.height = "auto";
-    toggleBtn.textContent = "個別表示";
-  } else {
-    area.style.flexWrap = "nowrap";
-    area.style.overflowY = "hidden";
-    area.style.height = "100vh";
-    area.scrollLeft = 0;
-    toggleBtn.textContent = "一覧表示";
-  }
-};
+  なので、
+  初期スクロールはタイトルの次＝総則1
+*/
+requestAnimationFrame(() => {
+  area.scrollLeft = window.innerWidth;
+});
 </script>
 
 </body>
