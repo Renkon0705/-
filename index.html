@@ -46,21 +46,23 @@ html, body {
 }
 
 .rule {
+  position: relative;          /* ← 基準 */
   flex: 0 0 40vw;
   height: 100vh;
   padding: 90px 30px 40px;
   box-sizing: border-box;
 }
 
-/* ▼ 総則番号だけ右へ */
+/* ▼ 総則番号：本文1行目の真上 */
 .rule-number {
+  position: absolute;
+  top: 90px;                   /* ← 本文開始位置と同じ */
+  left: 36px;                  /* ← 既存調整＋少し右 */
   font-size: 18px;
-  margin-bottom: 12px;
   writing-mode: horizontal-tb;
-  margin-left: 6px;
 }
 
-/* ▼ 本文は一切変更なし */
+/* ▼ 本文は一切変更しない */
 .rule-text {
   writing-mode: vertical-rl;
   font-size: 18px;
