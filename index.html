@@ -15,7 +15,7 @@ body {
   overflow: hidden;
 }
 
-/* ===== タイトル（右配置） ===== */
+/* ===== タイトル（右配置・1回だけ） ===== */
 .header {
   position: fixed;
   top: 20px;
@@ -40,10 +40,10 @@ body {
   opacity: 0.85;
 }
 
-/* ===== 横スワイプ ===== */
+/* ===== 横スワイプ（左へ） ===== */
 .scroll-area {
   display: flex;
-  direction: rtl;
+  flex-direction: row;
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
@@ -53,22 +53,23 @@ body {
 }
 
 .rule {
-  direction: ltr;
   min-width: 100vw;
-  padding: 40px 30px;
-  box-sizing: border-box;
   scroll-snap-align: start;
   display: flex;
   justify-content: center;
+  padding: 40px 30px;
+  box-sizing: border-box;
 }
 
-/* ===== 本文（さらに上） ===== */
+/* ===== 本文（ここが重要） ===== */
 .text {
   writing-mode: vertical-rl;
   font-size: 22px;
   line-height: 1.9;
   max-height: 80vh;
-  margin-top: -60px; /* ← ここだけ変更 */
+
+  /* 🔥 ここで確実に上へ動かす */
+  transform: translateY(-60px);
 }
 
 /* ===== ボタン ===== */
@@ -125,7 +126,7 @@ fetch(csvURL)
       area.appendChild(div);
     });
 
-    area.scrollLeft = area.scrollWidth;
+    area.scrollLeft = 0; // 総則1から表示
   });
 
 document.getElementById("toggleBtn").onclick = () => {
@@ -141,7 +142,7 @@ document.getElementById("toggleBtn").onclick = () => {
     area.style.flexWrap = "nowrap";
     area.style.overflowY = "hidden";
     area.style.height = "100vh";
-    area.scrollLeft = area.scrollWidth;
+    area.scrollLeft = 0;
     document.getElementById("toggleBtn").textContent = "一覧表示";
   }
 };
