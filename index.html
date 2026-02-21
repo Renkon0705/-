@@ -6,80 +6,81 @@
 <title>死滅回游 総則</title>
 
 <style>
-html, body {
+body {
   margin: 0;
-  padding: 0;
-  height: 100%;
-  background: linear-gradient(#5fa9dd 0%, #9fd3f0 60%, #1b1b1b 100%);
+  height: 100vh;
+  background: linear-gradient(#3b82f6, #60a5fa);
   font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
   color: #fff;
+  overflow: hidden;
 }
 
-/* 全体中央寄せ */
-.wrapper {
-  height: 100%;
+/* 全体スクロールエリア */
+.scroll-area {
+  height: 100vh;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+}
+
+/* 各総則ブロック */
+.rule {
+  min-width: 100vw;
+  padding: 80px 40px;
+  box-sizing: border-box;
+  scroll-snap-align: start;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* 横スクロール用コンテナ */
-.scroll-area {
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 40px 20px;
-}
-
-/* 縦書き本体 */
-.rules {
+/* 縦書き本文 */
+.rule-text {
   writing-mode: vertical-rl;
   text-orientation: upright;
-  height: 80vh;
-  display: inline-flex;
-  padding: 40px;
-  background: rgba(0,0,0,0.25);
-  box-shadow: 0 0 40px rgba(0,0,0,0.4);
-}
-
-/* 見出し */
-.title {
-  font-size: 42px;
-  letter-spacing: 0.2em;
-  margin-left: 40px;
-}
-
-.subtitle {
-  font-size: 26px;
-  margin-left: 30px;
-}
-
-/* 条文 */
-.rule {
-  font-size: 18px;
-  line-height: 1.8;
-  margin-left: 25px;
+  font-size: 20px;
+  line-height: 2;
+  max-height: 80vh;
 }
 
 /* 番号 */
-.rule span.num {
-  font-size: 22px;
-  margin-bottom: 10px;
-  display: inline-block;
+.rule-number {
+  font-size: 28px;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+/* タイトル */
+.title {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  writing-mode: vertical-rl;
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  z-index: 10;
+  opacity: 0.95;
+}
+
+/* フェード演出 */
+.rule::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), transparent);
+  pointer-events: none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="wrapper">
-  <div class="scroll-area">
-    <div class="rules">
-      <div class="title">死滅回游</div>
-      <div class="subtitle">総則</div>
-      <div id="ruleText" class="rule">読み込み中…</div>
-    </div>
-  </div>
+<div class="title">死滅回游<br>総則</div>
+
+<div class="scroll-area" id="scrollArea">
+  <!-- JSで総則を追加 -->
 </div>
 
 <script>
@@ -90,17 +91,31 @@ fetch(csvURL)
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1);
+
     const rules = rows
       .map(r => r.split(",")[1])
       .filter(v => v && v.trim() !== "");
 
-    const box = document.getElementById("ruleText");
-    box.innerHTML = "";
+    const area = document.getElementById("scrollArea");
+    area.innerHTML = "";
 
-    rules.forEach((r, i) => {
-      const div = document.createElement("div");
-      div.innerHTML = `<span class="num">${i + 1}</span>${r}`;
-      box.appendChild(div);
+    rules.forEach((rule, i) => {
+      const section = document.createElement("div");
+      section.className = "rule";
+
+      section.innerHTML = `
+        <div class="rule-text">
+          <div class="rule-number">${i + 1}</div>
+          ${rule}
+        </div>
+      `;
+
+      area.appendChild(section);
+    });
+
+    /* ★ 必ず「1」から表示 */
+    requestAnimationFrame(() => {
+      area.scrollLeft = 0;
     });
   });
 </script>
