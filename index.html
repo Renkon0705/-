@@ -15,7 +15,7 @@ body {
   overflow: hidden;
 }
 
-/* ===== タイトル（右上・縦書き） ===== */
+/* ===== タイトル（右上・縦） ===== */
 .title {
   position: fixed;
   top: 24px;
@@ -25,11 +25,10 @@ body {
   font-size: 36px;
   font-weight: bold;
   letter-spacing: 0.25em;
-  line-height: 1.2;
   z-index: 10;
 }
 
-/* ===== 横スクロールエリア ===== */
+/* ===== 表示エリア ===== */
 .scroll-area {
   height: 100vh;
   display: flex;
@@ -39,18 +38,33 @@ body {
   scroll-behavior: smooth;
 }
 
-/* ===== 各総則 ===== */
-.rule {
+/* 個別表示 */
+.scroll-area.individual .rule {
   min-width: 100vw;
+  scroll-snap-align: start;
+}
+
+/* 一覧表示 */
+.scroll-area.list {
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: none;
+}
+
+.scroll-area.list .rule {
+  min-width: 100%;
+}
+
+/* ===== 総則 ===== */
+.rule {
   padding: 80px 40px;
   box-sizing: border-box;
-  scroll-snap-align: start;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* ===== 縦書き本文 ===== */
 .rule-text {
   writing-mode: vertical-rl;
   text-orientation: upright;
@@ -59,61 +73,97 @@ body {
   max-height: 80vh;
 }
 
-/* ===== 総則番号 ===== */
 .rule-number {
   font-size: 28px;
   margin-bottom: 24px;
   opacity: 0.9;
+}
+
+/* ===== 切り替えボタン ===== */
+.toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 28px;
+  font-size: 16px;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: rgba(0,0,0,0.25);
+  color: #fff;
+  cursor: pointer;
+  z-index: 20;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 縦タイトル -->
 <div class="title">
   死滅回游<br>
   総則
 </div>
 
-<!-- スクロールエリア -->
-<div class="scroll-area" id="scrollArea"></div>
+<div class="scroll-area individual" id="scrollArea"></div>
+
+<button class="toggle-btn" id="toggleBtn">一覧表示</button>
 
 <script>
 const csvURL =
 "https://docs.google.com/spreadsheets/d/1apIMeSGaA8H6hFC0Ko-84c-AJXdAnQUMfj1nZSqwEnQ/export?format=csv&gid=1736586649";
+
+const area = document.getElementById("scrollArea");
+const btn  = document.getElementById("toggleBtn");
+
+let isList = false;
 
 fetch(csvURL)
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1);
 
+    /* ★ 並び順を逆にする */
     const rules = rows
       .map(r => r.split(",")[1])
-      .filter(v => v && v.trim() !== "");
+      .filter(v => v && v.trim() !== "")
+      .reverse();
 
-    const area = document.getElementById("scrollArea");
     area.innerHTML = "";
 
     rules.forEach((rule, i) => {
-      const section = document.createElement("div");
-      section.className = "rule";
-
-      section.innerHTML = `
+      const div = document.createElement("div");
+      div.className = "rule";
+      div.innerHTML = `
         <div class="rule-text">
           <div class="rule-number">${i + 1}</div>
           ${rule}
         </div>
       `;
-
-      area.appendChild(section);
+      area.appendChild(div);
     });
 
-    /* ★ ページ読み込み時、必ず一番端（死滅回游側） */
+    /* 初期位置：1番（左端） */
     requestAnimationFrame(() => {
       area.scrollLeft = 0;
     });
   });
+
+/* ===== 表示切り替え ===== */
+btn.onclick = () => {
+  isList = !isList;
+
+  if (isList) {
+    area.classList.remove("individual");
+    area.classList.add("list");
+    btn.textContent = "個別表示";
+    area.scrollTop = 0;
+  } else {
+    area.classList.remove("list");
+    area.classList.add("individual");
+    btn.textContent = "一覧表示";
+    area.scrollLeft = 0;
+  }
+};
 </script>
 
 </body>
