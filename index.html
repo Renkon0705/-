@@ -8,8 +8,8 @@
 <style>
 :root {
   /* ★★★ ここだけ触れば調整できる ★★★ */
-  --number-top: 66px;   /* 上下調整（小さくすると上へ） */
-  --number-left: 76px;  /* 左右調整（大きくすると右へ） */
+  --number-top: 66px;
+  --number-left: 76px;
 }
 
 html, body {
@@ -59,7 +59,6 @@ html, body {
   box-sizing: border-box;
 }
 
-/* ▼ 総則番号（本文は一切触らない） */
 .rule-number {
   position: absolute;
   top: var(--number-top);
@@ -68,7 +67,6 @@ html, body {
   writing-mode: horizontal-tb;
 }
 
-/* ▼ 本文：完全不変 */
 .rule-text {
   writing-mode: vertical-rl;
   font-size: 18px;
@@ -93,10 +91,10 @@ fetch(CSV_URL)
   .then(text => {
     const lines = text.split("\n").slice(1);
 
+    // ▼ B列（index 1）だけ取得
     const rules = lines
-      .map(l => l.replace(/"/g, "").trim())
-      .filter(l => l !== "")
-      .map(l => l.replace(/^,/, ""));
+      .map(l => l.split(",")[1])
+      .filter(v => v && v.trim() !== "");
 
     const area = document.getElementById("area");
 
