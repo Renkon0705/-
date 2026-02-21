@@ -6,6 +6,12 @@
 <title>死滅回游 総則</title>
 
 <style>
+:root {
+  /* ★★★ ここだけ触れば調整できる ★★★ */
+  --number-top: 66px;   /* 上下調整（小さくすると上へ） */
+  --number-left: 36px;  /* 左右調整（大きくすると右へ） */
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -46,23 +52,23 @@ html, body {
 }
 
 .rule {
-  position: relative;        /* ← 番号配置の基準 */
+  position: relative;
   flex: 0 0 40vw;
   height: 100vh;
   padding: 90px 30px 40px;
   box-sizing: border-box;
 }
 
-/* ▼ 総則番号：本文の直上（被らない位置） */
+/* ▼ 総則番号（本文は一切触らない） */
 .rule-number {
   position: absolute;
-  top: 66px;                 /* ← 本文より少し上 */
-  left: 36px;
+  top: var(--number-top);
+  left: var(--number-left);
   font-size: 18px;
   writing-mode: horizontal-tb;
 }
 
-/* ▼ 本文：絶対に触っていない */
+/* ▼ 本文：完全不変 */
 .rule-text {
   writing-mode: vertical-rl;
   font-size: 18px;
@@ -90,7 +96,7 @@ fetch(CSV_URL)
     const rules = lines
       .map(l => l.replace(/"/g, "").trim())
       .filter(l => l !== "")
-      .map(l => l.replace(/^,/, "")); // 本文先頭の , だけ除去
+      .map(l => l.replace(/^,/, ""));
 
     const area = document.getElementById("area");
 
