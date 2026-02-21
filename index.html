@@ -15,7 +15,7 @@ body {
   overflow: hidden;
 }
 
-/* ===== タイトル（右配置・1回だけ） ===== */
+/* ===== タイトル（右・1回だけ） ===== */
 .header {
   position: fixed;
   top: 20px;
@@ -31,19 +31,12 @@ body {
   letter-spacing: 6px;
 }
 
-.header .title {
-  font-size: 36px;
-}
-
-.header .subtitle {
-  font-size: 22px;
-  opacity: 0.85;
-}
+.header .title { font-size: 36px; }
+.header .subtitle { font-size: 22px; opacity: 0.85; }
 
 /* ===== 横スワイプ（左へ） ===== */
 .scroll-area {
   display: flex;
-  flex-direction: row;
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
@@ -61,15 +54,24 @@ body {
   box-sizing: border-box;
 }
 
-/* ===== 本文（ここが重要） ===== */
+/* ===== 総則本体 ===== */
 .text {
   writing-mode: vertical-rl;
   font-size: 22px;
   line-height: 1.9;
   max-height: 80vh;
 
-  /* 🔥 ここで確実に上へ動かす */
+  /* 本文位置（上に移動） */
   transform: translateY(-60px);
+}
+
+/* 総則番号 */
+.number {
+  writing-mode: vertical-rl;
+  font-size: 16px;
+  opacity: 0.7;
+  margin-bottom: 14px;
+  letter-spacing: 2px;
 }
 
 /* ===== ボタン ===== */
@@ -115,18 +117,27 @@ fetch(csvURL)
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1);
-    const rules = rows.map(r => r.split(",")[1]).filter(Boolean);
-
     const area = document.getElementById("scrollArea");
 
-    rules.forEach(rule => {
+    rows.forEach(r => {
+      const cols = r.split(",");
+      const num = cols[0];
+      const body = cols[1];
+      if (!body) return;
+
       const div = document.createElement("div");
       div.className = "rule";
-      div.innerHTML = `<div class="text">${rule}</div>`;
+      div.innerHTML = `
+        <div class="text">
+          <div class="number">${num}</div>
+          <div>${body}</div>
+        </div>
+      `;
       area.appendChild(div);
     });
 
-    area.scrollLeft = 0; // 総則1から表示
+    // 総則1を最初に表示
+    area.scrollLeft = 0;
   });
 
 document.getElementById("toggleBtn").onclick = () => {
