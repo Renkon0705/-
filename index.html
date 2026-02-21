@@ -43,12 +43,12 @@ body {
 /* ===== 横スワイプ ===== */
 .scroll-area {
   display: flex;
-  direction: rtl;                 /* 左スワイプで次 */
+  direction: rtl; /* 左スワイプで次 */
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  padding-top: 100px;             /* タイトル分の余白 */
+  padding-top: 100px; /* タイトル分 */
   box-sizing: border-box;
 }
 
@@ -62,11 +62,13 @@ body {
   justify-content: center;
 }
 
+/* ★ ここだけ調整 */
 .text {
   writing-mode: vertical-rl;
   font-size: 22px;
   line-height: 1.9;
   max-height: 80vh;
+  margin-top: -20px; /* ← 本文を少し上へ */
 }
 
 /* ===== ボタン ===== */
