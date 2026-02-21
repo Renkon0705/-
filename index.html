@@ -8,160 +8,118 @@
 <style>
 body {
   margin: 0;
-  height: 100vh;
-  background: linear-gradient(#3b82f6, #60a5fa);
-  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  background: #000;
   color: #fff;
+  font-family: "Hiragino Mincho ProN", serif;
   overflow: hidden;
 }
 
-/* ===== タイトル（右上・縦） ===== */
-.title {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  font-size: 36px;
-  font-weight: bold;
-  letter-spacing: 0.25em;
-  z-index: 10;
-}
-
-/* ===== 表示エリア ===== */
+/* 横スクロール全体 */
 .scroll-area {
-  height: 100vh;
   display: flex;
+  flex-direction: row-reverse; /* 右に右に並べる */
+  height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
 }
 
-/* 個別表示 */
-.scroll-area.individual .rule {
-  min-width: 100vw;
-  scroll-snap-align: start;
-}
-
-/* 一覧表示 */
-.scroll-area.list {
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scroll-snap-type: none;
-}
-
-.scroll-area.list .rule {
-  min-width: 100%;
-}
-
-/* ===== 総則 ===== */
+/* 各総則 */
 .rule {
-  padding: 80px 40px;
+  min-width: 100vw;
+  padding: 40px 30px;
   box-sizing: border-box;
+  scroll-snap-align: start;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  gap: 30px;
 }
 
-.rule-text {
+/* 左タイトル */
+.title {
   writing-mode: vertical-rl;
-  text-orientation: upright;
-  font-size: 20px;
-  line-height: 2;
-  max-height: 80vh;
+  font-size: 36px;
+  letter-spacing: 6px;
 }
 
-.rule-number {
-  font-size: 28px;
-  margin-bottom: 24px;
-  opacity: 0.9;
+/* 本文 */
+.text {
+  writing-mode: vertical-rl;
+  font-size: 22px;
+  line-height: 1.8;
 }
 
-/* ===== 切り替えボタン ===== */
-.toggle-btn {
+/* 下ボタン */
+.controls {
   position: fixed;
   bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 12px 28px;
-  font-size: 16px;
-  border-radius: 999px;
-  border: 2px solid #fff;
-  background: rgba(0,0,0,0.25);
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+button {
+  background: transparent;
   color: #fff;
+  border: 2px solid #fff;
+  padding: 10px 24px;
+  font-size: 16px;
   cursor: pointer;
-  z-index: 20;
 }
 </style>
 </head>
 
 <body>
 
-<div class="title">
-  死滅回游<br>
-  総則
+<div class="scroll-area" id="scrollArea"></div>
+
+<div class="controls">
+  <button id="toggleBtn">一覧表示</button>
 </div>
-
-<div class="scroll-area individual" id="scrollArea"></div>
-
-<button class="toggle-btn" id="toggleBtn">一覧表示</button>
 
 <script>
 const csvURL =
 "https://docs.google.com/spreadsheets/d/1apIMeSGaA8H6hFC0Ko-84c-AJXdAnQUMfj1nZSqwEnQ/export?format=csv&gid=1736586649";
 
-const area = document.getElementById("scrollArea");
-const btn  = document.getElementById("toggleBtn");
-
-let isList = false;
+let listMode = false;
 
 fetch(csvURL)
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1);
+    const rules = rows.map(r => r.split(",")[1]).filter(Boolean).reverse();
 
-    /* ★ 並び順を逆にする */
-    const rules = rows
-      .map(r => r.split(",")[1])
-      .filter(v => v && v.trim() !== "")
-      .reverse();
-
-    area.innerHTML = "";
+    const area = document.getElementById("scrollArea");
 
     rules.forEach((rule, i) => {
       const div = document.createElement("div");
       div.className = "rule";
       div.innerHTML = `
-        <div class="rule-text">
-          <div class="rule-number">${i + 1}</div>
-          ${rule}
-        </div>
+        <div class="title">死滅回游<br>総則${i + 1}</div>
+        <div class="text">${rule}</div>
       `;
       area.appendChild(div);
     });
 
-    /* 初期位置：1番（左端） */
-    requestAnimationFrame(() => {
-      area.scrollLeft = 0;
-    });
+    /* 初期表示：総則1 */
+    area.scrollLeft = area.scrollWidth;
   });
 
-/* ===== 表示切り替え ===== */
-btn.onclick = () => {
-  isList = !isList;
+document.getElementById("toggleBtn").onclick = () => {
+  listMode = !listMode;
+  const area = document.getElementById("scrollArea");
 
-  if (isList) {
-    area.classList.remove("individual");
-    area.classList.add("list");
-    btn.textContent = "個別表示";
-    area.scrollTop = 0;
+  if (listMode) {
+    area.style.flexWrap = "wrap";
+    area.style.overflowY = "auto";
+    area.style.height = "auto";
+    document.getElementById("toggleBtn").textContent = "個別表示";
   } else {
-    area.classList.remove("list");
-    area.classList.add("individual");
-    btn.textContent = "一覧表示";
-    area.scrollLeft = 0;
+    area.style.flexWrap = "nowrap";
+    area.style.overflowY = "hidden";
+    area.style.height = "100vh";
+    area.scrollLeft = area.scrollWidth;
+    document.getElementById("toggleBtn").textContent = "一覧表示";
   }
 };
 </script>
